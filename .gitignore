@@ -1,0 +1,29 @@
+# Secrets: never commit. Use .env.example (placeholders only).
+.env
+.env.*
+!.env.example
+
+# Course data: database and product images are NOT committed (see README)
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+.venv
+.venv.nosync
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Node / Vite
+node_modules
+node_modules.nosync
+dist/
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+*.log

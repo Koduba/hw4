@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Campus Customs: App Check (Problem 11)</title>
+<style>
+  :root { --yale:#00356b; --accent:#286dc0; --ink:#13213a; --muted:#5a6b82; --line:#d8e2ef; --ok:#1d7a46; }
+  * { box-sizing: border-box; }
+  body { margin:0; font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color:var(--ink); background:#f4f7fb; }
+  header { background:var(--yale); color:#fff; padding:28px 24px; }
+  header h1 { margin:0 0 4px; font-size:1.7rem; }
+  header p { margin:0; opacity:.85; }
+  main { max-width:1100px; margin:0 auto; padding:24px; }
+  .summary { background:#fff; border:1px solid var(--line); border-radius:12px; padding:16px 20px; margin-bottom:28px; }
+  .summary table { width:100%; border-collapse:collapse; }
+  .summary th, .summary td { text-align:left; padding:6px 8px; border-bottom:1px solid var(--line); vertical-align:top; }
+  .pass { color:var(--ok); font-weight:700; }
+  section { background:#fff; border:1px solid var(--line); border-radius:12px; padding:20px; margin-bottom:28px; }
+  section h2 { margin:0 0 6px; color:var(--yale); font-size:1.35rem; }
+  .steps { color:var(--muted); font-size:.92rem; margin:0 0 12px; }
+  figure { margin:0; }
+  figure a img { display:block; width:100%; border:1px solid var(--line); border-radius:8px; }
+  figcaption { margin-top:12px; }
+  .proves { background:#eef5ff; border-left:4px solid var(--accent); padding:10px 14px; border-radius:6px; }
+  table.db { border-collapse:collapse; margin-top:10px; font-size:.9rem; }
+  table.db th, table.db td { border:1px solid var(--line); padding:4px 10px; text-align:center; }
+  table.db th { background:#f0f4fa; }
+  code { background:#eef2f7; padding:1px 5px; border-radius:4px; font-size:.9em; }
+  footer { color:var(--muted); font-size:.85rem; text-align:center; padding:8px 24px 32px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Campus Customs: App Check</h1>
+  <p>Problem 11. Live site tested at http://localhost:5173 (React + Vite) with the FastAPI backend on :8000, on 2026-10-24. Click any screenshot to open it full size.</p>
+</header>
+<main>
+
+<div class="summary">
+  <table>
+    <tr><th>#</th><th>Check</th><th>Result</th></tr>
+    <tr><td>1</td><td>Chat checks an item's inventory (honest stock and price from the DB)</td><td class="pass">PASS</td></tr>
+    <tr><td>2</td><td>Dynamic search-result cards appear after a category question ("what hoodies do you have?")</td><td class="pass">PASS</td></tr>
+    <tr><td>3</td><td>Problem 9 usability feature: "In stock in my size" filter and price sort on Products</td><td class="pass">PASS</td></tr>
+  </table>
+</div>
+
+<section id="check-1">
+  <h2>Check 1: Chat checks the inventory level of an item</h2>
+  <p class="steps">Steps: open the <b>Football Left Chest T Shirt</b> product page → open the chat ("Ask the Bulldog") → ask <i>"How many of this tee do you have in each size, and what's the price?"</i></p>
+  <figure>
+    <a href="app_check_images/inventory.png"><img src="app_check_images/inventory.png" alt="Product page for the Football Left Chest T Shirt with the chat answering: It's $32. We have 2 in S, 2 in L, and 5 in XXL. XS, M, and XL are sold out."></a>
+    <figcaption>
+      <p class="proves"><b>What this proves:</b> the assistant knew which item "this tee" meant from the page it was on, and its answer, <i>"It's $32. We have 2 in S, 2 in L, and 5 in XXL. XS, M, and XL are sold out,"</i>, matches the database exactly. The sold-out sizes are stated plainly rather than hidden, and the page's own size grid (left of the chat) shows the same numbers.</p>
+      Database rows at test time (<code>inventory</code> joined to <code>catalogue</code>):
+      <table class="db">
+        <tr><th>Price</th><th>XS</th><th>S</th><th>M</th><th>L</th><th>XL</th><th>XXL</th></tr>
+        <tr><td>$32.00</td><td>0</td><td>2</td><td>0</td><td>2</td><td>0</td><td>5</td></tr>
+      </table>
+    </figcaption>
+  </figure>
+</section>
+
+<section id="check-2">
+  <h2>Check 2: Dynamic search-result cards after a category question</h2>
+  <p class="steps">Steps: on the Home page, open the chat → ask <i>"what hoodies do you have?"</i></p>
+  <figure>
+    <a href="app_check_images/hoodie_cards.png"><img src="app_check_images/hoodie_cards.png" alt="A 'Picked by your assistant: Yale hoodies' section on the page showing 24 of 27 matches as product cards, with the chat reply beside it."></a>
+    <figcaption>
+      <p class="proves"><b>What this proves:</b> the agent searched the catalogue and returned structured product matches, and the website rendered them on the page as a "Picked by your assistant: Yale hoodies" section: <b>24 cards, all in the Hoodies category</b>, each with a photo, name, price, short description, live stock badge and sizes in stock. The line "Showing 24 of 27 matches" matches the database (27 hoodies), and the chat reply points to the cards ("We carry 27 hoodies, and I've put 24 on the page").</p>
+    </figcaption>
+  </figure>
+</section>
+
+<section id="check-3">
+  <h2>Check 3: Problem 9 usability feature, "In stock in my size" filter and sort</h2>
+  <p class="steps">Steps: open <b>Products</b> → under "In stock in" pick <b>M</b> → set Sort to <b>Price: low to high</b> (URL becomes <code>/products?size=M&amp;sort=price-asc</code>).</p>
+  <figure>
+    <a href="app_check_images/usability_size_filter.png"><img src="app_check_images/usability_size_filter.png" alt="Products page with the size M filter selected and sorted by price low to high, showing 80 products in stock in M with per-size stock badges."></a>
+    <figcaption>
+      <p class="proves"><b>What this proves:</b> picking a size hides everything that's sold out in it. The page shows <b>"80 products in stock in M"</b>, matching the database (<code>SELECT count(DISTINCT product_id) FROM inventory WHERE size='M' AND quantity&gt;0</code> → 80). Each card's badge switches to that size ("20 in stock in M", "Only 2 left in M"), and the list is sorted from $32 up to $98, so a shopper only sees what they can actually buy.</p>
+    </figcaption>
+  </figure>
+</section>
+
+</main>
+<footer>Screenshots were captured from the running app in headless Chrome as a guest shopper, with no console errors. Images are in <code>output/app_check_images/</code>.</footer>
+</body>
+</html>
