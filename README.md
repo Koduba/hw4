@@ -34,9 +34,19 @@ hw4/
     └── audit_trail.json     # append-only agent loop log
 ```
 
+The agent itself is four files under `backend/`: `prompts/prompt.md`, `agent.py`, `tools.py` and `models.py`. The other backend modules support the app (accounts, database access, chat memory, safety guards, audit trail).
+
 ## Setup
 
-1. **Course data (not committed):** create `hw4/data/` and put `campus_customs.db` and the `products/` image folder from the course materials in it.
+1. **Local-only data pack (not in git):** create `hw4/data/` with the course materials laid out like this:
+
+   ```
+   data/
+   ├── campus_customs.db
+   └── products/              # images referenced by the catalogue
+   ```
+
+   Then follow the steps below to run the backend and frontend.
 2. **Secrets:** `cp .env.example .env`, then set `PORTKEY_API_KEY` in `.env`. `.env` is git-ignored; never commit real keys.
 3. **Install:**
    ```bash
